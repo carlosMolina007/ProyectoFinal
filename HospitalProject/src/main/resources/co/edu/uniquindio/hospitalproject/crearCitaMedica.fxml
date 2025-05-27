@@ -6,16 +6,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="439.0" prefWidth="714.0" style="-fx-background-color: #001c42;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.hospitalproject.model.Doctor">
+<AnchorPane prefHeight="439.0" prefWidth="714.0" style="-fx-background-color: #001c42;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.hospitalproject.viewController.crearCitaMedicaViewController">
    <children>
-      <Label layoutX="245.0" layoutY="102.0" />
       <Label contentDisplay="CENTER" layoutX="252.0" layoutY="14.0" text="CREAR UNA CITA MÉDICA" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Cambria Bold" size="18.0" />
@@ -25,18 +23,22 @@
          <children>
             <AnchorPane layoutX="8.0" layoutY="7.0" prefHeight="335.0" prefWidth="603.0" style="-fx-background-color: #003e86;">
                <children>
-                  <TextField fx:id="txtIDPaciente" layoutX="62.0" layoutY="45.0" prefHeight="25.0" prefWidth="211.0" promptText="Identificacion paciente" style="-fx-background-radius: 12;" />
-                  <DatePicker fx:id="DateFechaCita" layoutX="62.0" layoutY="81.0" prefHeight="25.0" prefWidth="211.0" promptText="Fecha de la cita" />
-                  <ComboBox fx:id="ComboBoxHora" layoutX="63.0" layoutY="121.0" prefHeight="25.0" prefWidth="88.0" promptText="Hora" />
-                  <ComboBox fx:id="ComboBoxMinutos" layoutX="186.0" layoutY="121.0" prefHeight="25.0" prefWidth="88.0" promptText="Minutos" />
+                  <DatePicker fx:id="fechaCita" layoutX="62.0" layoutY="81.0" prefHeight="25.0" prefWidth="211.0" promptText="Fecha de la cita" />
+                  <ComboBox fx:id="comboHoraCita" layoutX="63.0" layoutY="121.0" prefHeight="26.0" prefWidth="96.0" promptText="Hora" />
+                  <ComboBox fx:id="comboMinutosCita" layoutX="178.0" layoutY="121.0" prefHeight="26.0" prefWidth="96.0" promptText="Minutos" />
                   <MenuButton fx:id="MenuEspecialidad" layoutX="62.0" layoutY="161.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="211.0" style="-fx-background-radius: 12;" text="Tipo de especialidad">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="Medicina general" />
-                        <MenuItem mnemonicParsing="false" text="Oncología" />
+                        <MenuItem fx:id="mBtnMedicinaGeneral" mnemonicParsing="false" onAction="#optMedicinaGeneral" text="Médico general" />
+                        <MenuItem fx:id="mBtnOdontologia" mnemonicParsing="false" onAction="#optOdontologia" text="Odontólogo" />
+                        <MenuItem fx:id="mBtnOncologia" mnemonicParsing="false" onAction="#optOncologia" text="Oncólogo" />
+                        <MenuItem fx:id="mBtnOftalmologia" mnemonicParsing="false" onAction="#optOftalmologia" text="Oftalmólogo" />
+                        <MenuItem fx:id="mBtnInmunologia" mnemonicParsing="false" onAction="#optInmunologia" text="Inmunólogo" />
+                        <MenuItem fx:id="mBtnNeurologia" mnemonicParsing="false" onAction="#optNeurologia" text="Neurólogo" />
+                        <MenuItem fx:id="mBtnReumatologia" mnemonicParsing="false" onAction="#optReumatologia" text="Reumatólogo" />
                      </items>
                   </MenuButton>
-                  <Button fx:id="btmBack" layoutX="221.0" layoutY="224.0" mnemonicParsing="false" prefHeight="7.0" prefWidth="52.0" style="-fx-background-radius: 12;" text="Back" />
-                  <Button fx:id="btmSolicitarCita" alignment="TOP_CENTER" layoutX="63.0" layoutY="224.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="124.0" style="-fx-background-radius: 12;" text="Solicitar cita" />
+                  <Button fx:id="btnBack" layoutX="221.0" layoutY="224.0" mnemonicParsing="false" onAction="#backToPaciente" prefHeight="7.0" prefWidth="52.0" style="-fx-background-radius: 12;" text="Back" />
+                  <Button fx:id="btnSolicitarCita" alignment="TOP_CENTER" layoutX="63.0" layoutY="224.0" mnemonicParsing="false" onAction="#solicitarCita" prefHeight="17.0" prefWidth="124.0" style="-fx-background-radius: 12;" text="Solicitar cita" />
                   <ImageView fitHeight="230.0" fitWidth="226.0" layoutX="338.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../Imagenes/paciente.png" />
@@ -45,6 +47,8 @@
                         <ColorAdjust brightness="1.0" contrast="1.0" hue="1.0" saturation="1.0" />
                      </effect>
                   </ImageView>
+                  <Label fx:id="lblNombrePaciente" layoutX="63.0" layoutY="20.0" textFill="WHITE" />
+                  <Label fx:id="lblIdPaciente" layoutX="63.0" layoutY="48.0" textFill="WHITE" />
                </children>
             </AnchorPane>
          </children>

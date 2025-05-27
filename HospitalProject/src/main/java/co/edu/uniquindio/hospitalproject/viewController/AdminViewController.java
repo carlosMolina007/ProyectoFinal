@@ -1,14 +1,24 @@
 package co.edu.uniquindio.hospitalproject.viewController;
 
+import co.edu.uniquindio.hospitalproject.controller.OcupacionHospitalController;
+import co.edu.uniquindio.hospitalproject.model.Hospital;
 import co.edu.uniquindio.hospitalproject.utils.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class AdminViewController {
+
+    Hospital hospital;
 
     @FXML
     private Button btnConsultarOcupacionHP;
@@ -55,7 +65,29 @@ public class AdminViewController {
 
     @FXML
     void consultarOcupacionHP(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/hospitalproject/ocupacionHospital.fxml"));
+            Parent root = loader.load();
 
+            OcupacionHospitalViewController ocupacionHPVC = loader.getController();
+
+            // Pasar datos necesarios, por ejemplo:
+            OcupacionHospitalController ocupacionHPC = new OcupacionHospitalController(Hospital.getInstancia());
+            int cantSalasTotal = ocupacionHPC.cantdSalasHospital();
+            int cantSalasOcupadas = ocupacionHPC.cantSalasOcupadas();
+            int porcentajeOcupado = ocupacionHPC.porcentajeOcupacionHospital();
+            ocupacionHPVC.mostrarMensajeOcupacionHospital(cantSalasTotal, cantSalasOcupadas, porcentajeOcupado);
+
+            Stage dialog = new Stage();
+            ocupacionHPVC.setStage(dialog); // Si tienes método para setear stage
+            dialog.setTitle("Ocupación Hospital");
+            dialog.setScene(new Scene(root));
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -71,7 +103,8 @@ public class AdminViewController {
 
     @FXML
     void gestionarHorarios(ActionEvent event) {
-
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        SceneManager.cambiarEscena(stage, "crudHorariosAtencion.fxml");
     }
 
     @FXML

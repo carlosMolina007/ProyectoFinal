@@ -5,7 +5,6 @@ import co.edu.uniquindio.hospitalproject.model.Hospital;
 import co.edu.uniquindio.hospitalproject.model.Sala;
 import co.edu.uniquindio.hospitalproject.utils.SceneManager;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

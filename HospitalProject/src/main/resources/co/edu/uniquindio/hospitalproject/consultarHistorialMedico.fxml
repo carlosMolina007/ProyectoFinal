@@ -23,12 +23,12 @@
                         <Font name="Cambria Bold" size="17.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblNombrePaciente" layoutX="19.0" layoutY="53.0" textFill="WHITE">
+                  <Label fx:id="lblNombrePaciente" layoutX="332.0" layoutY="12.0" textFill="WHITE">
                      <font>
                         <Font name="Cambria Bold" size="17.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="tblHistorialMedico" layoutX="19.0" layoutY="90.0" prefHeight="310.0" prefWidth="565.0">
+                  <TableView fx:id="tblHistorialMedico" layoutX="19.0" layoutY="49.0" prefHeight="351.0" prefWidth="566.0">
                      <columns>
                         <TableColumn fx:id="tbcFecha" prefWidth="119.0" text="Fecha" />
                         <TableColumn fx:id="tbcDiagnostico" prefWidth="229.0" text="Diagnóstico" />

@@ -5,12 +5,14 @@ import co.edu.uniquindio.hospitalproject.model.enums.Genero;
 
 
 import java.time.LocalDate;
+import java.util.Properties;
 
 public class Paciente extends Persona {
 
     //Atributos propios de Paciente
     private String email;
     private String telefono;
+    private Properties holaMundo;
 
     //Constructor de paciente extendido con Persona
 
@@ -40,13 +42,5 @@ public class Paciente extends Persona {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-
-    public String getNombreCompleto() {
-        return getNombre() + " " + getApellido();
-    }
-
-
-
-
 }
 

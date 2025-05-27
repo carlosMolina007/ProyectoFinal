@@ -10,10 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="415.0" prefWidth="714.0" style="-fx-background-color: #001c42;" type="AnchorPane"
-         xmlns="http://javafx.com/javafx/23.0.1"
-         xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="co.edu.uniquindio.hospitalproject.viewController.ActualizarDatosPacienteViewController">
+<AnchorPane prefHeight="415.0" prefWidth="714.0" style="-fx-background-color: #001c42;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.hospitalproject.viewController.ActualizarDatosPacienteViewController">
 
    <children>
       <Label layoutX="215.0" layoutY="14.0" text="ACTUALIZAR DATOS DE PACIENTE" textAlignment="CENTER" textFill="WHITE">
@@ -32,47 +29,47 @@
                   <TextField fx:id="txtCorreoElect" layoutX="402.0" layoutY="134.0" promptText="Correo electrónico" style="-fx-background-radius: 12;" />
                   <TextField fx:id="txtNumeroTel" layoutX="402.0" layoutY="174.0" promptText="Número de telefono" style="-fx-background-radius: 12;" />
 
-                  <Button fx:id="btmVolver" layoutX="64.0" layoutY="268.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" style="-fx-background-radius: 12;" text="Volver" onAction="#handleVolver" />
+                  <MenuButton fx:id="menuGenero" layoutX="402.0" layoutY="214.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" style="-fx-background-radius: 12;" text="Género">
+                     <items>
+                        <MenuItem fx:id="btnMasculino" mnemonicParsing="false" onAction="#opcionMasculino" text="Masculino" />
+                        <MenuItem fx:id="btnFemenino" mnemonicParsing="false" onAction="#opcionFemenino" text="Femenino" />
+                        <MenuItem fx:id="btnOtro" mnemonicParsing="false" onAction="#opcionOtro" text="Otro" />
+                     </items>
+                  </MenuButton>
 
-                  <Button fx:id="btnGuardarCambios" layoutX="227.0" layoutY="268.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" style="-fx-background-radius: 12;" text="Guardar cambios" onAction="#handleGuardarCambios" />
+                  <Button fx:id="btnBack" layoutX="64.0" layoutY="274.0" mnemonicParsing="false" onAction="#backToPaciente" prefHeight="25.0" prefWidth="70.0" style="-fx-background-radius: 12;" text="Volver" />
 
-                  <Label layoutX="116.0" layoutY="28.0" text="DATOS ACTUALES" textAlignment="CENTER" textFill="#e19f10">
+                  <Button fx:id="btnGuardarCambios" layoutX="227.0" layoutY="274.0" mnemonicParsing="false" onAction="#guardarCambios" prefHeight="25.0" prefWidth="149.0" style="-fx-background-radius: 12;" text="Guardar cambios" />
+
+                  <Label layoutX="116.0" layoutY="28.0" text="DATOS ACTUALES" textAlignment="CENTER" textFill="#f2f2f2">
                      <font>
                         <Font name="Cambria Bold" size="17.0" />
                      </font>
                   </Label>
 
-                  <MenuButton fx:id="menuGenero" layoutX="402.0" layoutY="214.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" style="-fx-background-radius: 12;" text="Género">
-                     <items>
-                        <MenuItem fx:id="optMasculino" mnemonicParsing="false" text="Masculino" />
-                        <MenuItem fx:id="optFemenino" mnemonicParsing="false" text="Femenino" />
-                        <MenuItem fx:id="optOtro" mnemonicParsing="false" text="Otro" />
-                     </items>
-                  </MenuButton>
-
-                  <VBox fx:id="vBoxDatos" layoutX="43.0" layoutY="60.0" prefHeight="184.0" prefWidth="306.0" spacing="5">
+                  <VBox fx:id="vBoxDatos" layoutX="43.0" layoutY="60.0" prefHeight="184.0" prefWidth="306.0" spacing="7.0">
                      <children>
-                        <Label fx:id="lblNombreActual" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" prefWidth="312.0" textFill="WHITE">
+                        <Label fx:id="lblNombreMostrar" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblApellidoActual" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" prefWidth="312.0" textFill="WHITE">
+                        <Label fx:id="lblApellidoMostrar" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblCorreoElectActual" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" prefWidth="312.0" textFill="WHITE">
+                        <Label fx:id="lblEmailMostrar" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblNumeroTelActual" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" prefWidth="312.0" textFill="WHITE">
+                        <Label fx:id="lblNumeroMostrar" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblGeneroActual" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" prefWidth="312.0" textFill="WHITE">
+                        <Label fx:id="lblGeneroMostrar" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="38.0" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -83,7 +80,7 @@
                      </opaqueInsets>
                   </VBox>
 
-                  <Label layoutX="415.0" layoutY="28.0" text="DATOS NUEVOS" textAlignment="CENTER" textFill="#e19f10">
+                  <Label layoutX="415.0" layoutY="28.0" text="DATOS NUEVOS" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="Cambria Bold" size="17.0" />
                      </font>
@@ -94,4 +91,4 @@
          </children>
       </AnchorPane>
    </children>
-</fx:root>
+</AnchorPane>

@@ -40,7 +40,8 @@ public class DoctorViewController {
 
     @FXML
     void btnGestionarHorariosConsulta(ActionEvent event) {
-
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        SceneManager.cambiarEscena(stage, "gestion.fxml");
     }
 
     @FXML

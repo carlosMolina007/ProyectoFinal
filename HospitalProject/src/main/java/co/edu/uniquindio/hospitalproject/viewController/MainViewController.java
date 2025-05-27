@@ -1,17 +1,16 @@
 package co.edu.uniquindio.hospitalproject.viewController;
 
 //import co.edu.uniquindio.hospitalproject.model.Administrador;
+
 import co.edu.uniquindio.hospitalproject.model.Administrador;
 import co.edu.uniquindio.hospitalproject.model.Hospital;
-//import co.edu.uniquindio.hospitalproject.model.Usuario;
 import co.edu.uniquindio.hospitalproject.model.Usuario;
-import co.edu.uniquindio.hospitalproject.model.enums.TipoRol;
+import co.edu.uniquindio.hospitalproject.utils.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import co.edu.uniquindio.hospitalproject.utils.SceneManager;
 import javafx.stage.Stage;
 
 import java.util.Collection;

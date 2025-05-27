@@ -1,6 +1,7 @@
 module co.edu.uniquindio.hospitalproject {
     requires javafx.controls;
     requires javafx.fxml;
+    requires jakarta.mail;
     requires java.desktop;
 
 

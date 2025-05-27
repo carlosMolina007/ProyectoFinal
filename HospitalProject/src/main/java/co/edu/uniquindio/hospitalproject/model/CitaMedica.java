@@ -6,6 +6,7 @@ import java.time.LocalTime;
 
 public class CitaMedica {
     //Atributos
+    private String idCita;
     private LocalDate fechaCita;
     private LocalTime horaCita;
     private Paciente pacienteAsignado;
@@ -14,8 +15,9 @@ public class CitaMedica {
     private EstadoCita estadoCita;
 
     //Constructor
-    public CitaMedica(LocalDate fechaCita, LocalTime horaCita, Paciente pacienteAsignado, Doctor doctorAsignado,
+    public CitaMedica(String idCita, LocalDate fechaCita, LocalTime horaCita, Paciente pacienteAsignado, Doctor doctorAsignado,
                       Sala salaAsignada, EstadoCita estadoCita) {
+        this.idCita = idCita;
         this.fechaCita = fechaCita;
         this.horaCita = horaCita;
         this.pacienteAsignado = pacienteAsignado;
@@ -71,5 +73,12 @@ public class CitaMedica {
 
     public void setEstadoCita(EstadoCita estadoCita) {
         this.estadoCita = estadoCita;
+    }
+
+    public String getIdCita() {
+        return idCita;
+    }
+    public void setIdCita(String idCita) {
+        this.idCita = idCita;
     }
 }

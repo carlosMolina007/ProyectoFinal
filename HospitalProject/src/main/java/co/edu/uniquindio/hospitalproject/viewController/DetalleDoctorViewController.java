@@ -1,7 +1,6 @@
 package co.edu.uniquindio.hospitalproject.viewController;
 
 import co.edu.uniquindio.hospitalproject.model.Doctor;
-import co.edu.uniquindio.hospitalproject.model.Paciente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

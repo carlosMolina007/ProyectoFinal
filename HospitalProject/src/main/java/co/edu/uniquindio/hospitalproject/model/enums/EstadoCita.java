@@ -3,11 +3,7 @@ package co.edu.uniquindio.hospitalproject.model.enums;
 public enum EstadoCita {
 
     PENDIENTE("Pendiente"),
-    CONFIRMADA("Confirmada"),
-    ENESPERA("En espera"),
-    FINALIZADA("Finalizada"),
-    CANCELADA("Cancelada"),
-    REPROGRAMADA("Reprogramada");
+    CANCELADA("Cancelada");
 
     public final String estadoCita;
 

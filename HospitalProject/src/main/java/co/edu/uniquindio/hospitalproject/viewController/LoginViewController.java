@@ -2,17 +2,18 @@ package co.edu.uniquindio.hospitalproject.viewController;
 
 import co.edu.uniquindio.hospitalproject.controller.AdminController;
 import co.edu.uniquindio.hospitalproject.controller.DoctorController;
+import co.edu.uniquindio.hospitalproject.controller.LoginController;
 import co.edu.uniquindio.hospitalproject.controller.PacienteController;
 import co.edu.uniquindio.hospitalproject.model.Administrador;
 import co.edu.uniquindio.hospitalproject.model.Hospital;
 import co.edu.uniquindio.hospitalproject.model.Usuario;
 import co.edu.uniquindio.hospitalproject.utils.SceneManager;
+import co.edu.uniquindio.hospitalproject.utils.SessionActual;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import co.edu.uniquindio.hospitalproject.controller.LoginController;
 
 import java.util.LinkedList;
 
@@ -90,41 +91,57 @@ public class LoginViewController {
         String password = fieldPassword.getText().trim();
         String userRol = menuRol.getText().trim();
 
-
         controller.setListUsers(listUsers);
         boolean validarLogin = controller.validarUsuario(username, password, userRol);
 
         if (validarLogin) {
+            hospital = Hospital.getInstancia();
+
+            // Buscar el usuario para guardar info en la sesión
+            Usuario usuario = hospital.getListUsers()
+                    .stream()
+                    .filter(u -> u.getUsuario().equals(username))
+                    .findFirst()
+                    .orElse(null);
+
+            if (usuario != null && usuario.getPersona() != null) {
+//                SessionActual.username = username;
+                SessionActual.nombrePacienteActivo = usuario.getPersona().getNombre();
+                SessionActual.idPacienteActivo = usuario.getPersona().getCedula();
+            } else {
+                mostrarAlertaError("Error al obtener los datos del usuario.");
+                return;
+            }
+
+            // Cambio de escena según el rol
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            switch (userRol){
+            switch (userRol) {
                 case "Doctor" -> {
                     DoctorViewController doctorVC = SceneManager.cambiarEscena(stage, "doctor.fxml");
-                    if(doctorVC != null){
-                        DoctorController doctorC = new DoctorController(hospital.getInstancia());
+                    if (doctorVC != null) {
+                        DoctorController doctorC = new DoctorController(hospital);
                         String nombreDoctor = doctorC.retornarNombreDoc(username);
                         doctorVC.agregarNombreDoctor(nombreDoctor);
                     }
-
                 }
                 case "Administrador" -> {
                     AdminViewController adminVC = SceneManager.cambiarEscena(stage, "admin.fxml");
-                    if(adminVC != null){
-                        AdminController adminC = new AdminController(hospital.getInstancia());
+                    if (adminVC != null) {
+                        AdminController adminC = new AdminController(hospital);
                         String nombreAdmin = adminC.retornarNombreAdmin(username);
                         adminVC.agregarNombreAdminTitulo(nombreAdmin);
                     }
-
                 }
                 case "Paciente" -> {
                     PacienteViewController pacienteVC = SceneManager.cambiarEscena(stage, "paciente.fxml");
-                    if(pacienteVC != null){
-                        PacienteController pacienteC = new PacienteController(hospital.getInstancia());
+                    if (pacienteVC != null) {
+                        PacienteController pacienteC = new PacienteController(hospital);
                         String nombrePaciente = pacienteC.retornarNombrePaciente(username);
                         pacienteVC.agregarNombrePaciente(nombrePaciente);
                     }
                 }
             }
-        }else {
+        } else {
             mostrarAlertaError("Usuario, contraseña o rol incorrecto, intente nuevamente");
         }
     }
