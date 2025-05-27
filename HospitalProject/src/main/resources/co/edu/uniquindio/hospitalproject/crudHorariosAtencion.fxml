@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="433.0" prefWidth="746.0" style="-fx-background-color: #001c42;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.hospitalproject.viewController.CrudHorariosAtencion">
+   <children>
+      <SplitPane dividerPositions="0.39714625445897733" layoutX="52.0" layoutY="54.0" prefHeight="354.0" prefWidth="674.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="353.0" prefWidth="239.0" style="-fx-background-color: #c2dbfb;">
+               <children>
+                  <Pane layoutX="11.0" layoutY="14.0" prefHeight="324.0" prefWidth="221.0" style="-fx-background-color: #003e86;">
+                     <children>
+                        <ComboBox fx:id="comboDiasSemana" layoutX="30.0" layoutY="88.0" prefHeight="26.0" prefWidth="162.0" promptText="Dias de la semana" style="-fx-background-radius: 12;" />
+                        <ComboBox fx:id="comboHoraInicio" layoutX="25.0" layoutY="145.0" prefHeight="26.0" prefWidth="75.0" promptText="Hora" style="-fx-background-radius: 12;" />
+                        <ComboBox fx:id="comboMinutosInicio" layoutX="107.0" layoutY="145.0" prefHeight="26.0" prefWidth="90.0" promptText="Minutos" style="-fx-background-radius: 12;" />
+                        <ComboBox fx:id="comboHoraFin" layoutX="25.0" layoutY="200.0" prefHeight="26.0" prefWidth="75.0" promptText="Hora" style="-fx-background-radius: 12;" />
+                        <ComboBox fx:id="comboMinutosFin" layoutX="107.0" layoutY="200.0" prefHeight="26.0" prefWidth="90.0" promptText="Minutos" style="-fx-background-radius: 12;" />
+                        <Label layoutX="30.0" layoutY="67.0" text="Seleccion una opción:" textFill="WHITE">
+                           <font>
+                              <Font name="Cambria" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="29.0" layoutY="125.0" text="Hora de inicio del turno:" textFill="WHITE">
+                           <font>
+                              <Font name="Cambria" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="30.0" layoutY="181.0" text="Hora fin del turno:" textFill="WHITE">
+                           <font>
+                              <Font name="Cambria" size="12.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnAgregar" layoutX="32.0" layoutY="269.0" mnemonicParsing="false" onAction="#agregar" style="-fx-background-radius: 12;" text="Agregar" />
+                        <Button fx:id="btnActualizar" layoutX="111.0" layoutY="269.0" mnemonicParsing="false" onAction="#actualizar" style="-fx-background-radius: 12;" text="Actualizar" />
+                        <TextField fx:id="txtCedulaDoctor" layoutX="26.0" layoutY="31.0" prefHeight="25.0" prefWidth="162.0" promptText="Cédula doctor" style="-fx-background-radius: 12;" />
+                        <Label layoutX="30.0" layoutY="14.0" text="Ingrese la cédula:" textFill="WHITE">
+                           <font>
+                              <Font name="Cambria" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="174.0" prefWidth="146.0" style="-fx-background-color: #c2dbfb;">
+               <children>
+                  <TableView fx:id="tblHorariosAtencion" layoutX="14.0" layoutY="6.0" prefHeight="306.0" prefWidth="374.0">
+                    <columns>
+                      <TableColumn fx:id="tbcNombreDoctor" prefWidth="106.40002727508545" text="Nombre Doctor" />
+                      <TableColumn fx:id="tbcDiaHorario" prefWidth="105.5999755859375" text="Día" />
+                        <TableColumn fx:id="tbcHoraInicio" prefWidth="83.99998474121094" text="Hora inicio" />
+                        <TableColumn fx:id="tbcHoraFin" prefWidth="79.199951171875" text="Hora fin" />
+                    </columns>
+                  </TableView>
+                  <Button fx:id="btnEliminar" layoutX="323.0" layoutY="320.0" mnemonicParsing="false" onAction="#eliminar" style="-fx-background-radius: 12;" text="Eliminar" />
+                  <Button fx:id="btnDeseleccionar" layoutX="226.0" layoutY="320.0" mnemonicParsing="false" onAction="#deseleccionar" style="-fx-background-radius: 12;" text="Deseleccionar" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+      <Label layoutX="199.0" layoutY="14.0" text="Gestión de horarios Doctores" textFill="WHITE">
+         <font>
+            <Font name="Cambria" size="28.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnBack" layoutX="685.0" layoutY="19.0" mnemonicParsing="false" onAction="#backToAdmin" style="-fx-background-radius: 12;" text="Back" />
+   </children>
+</AnchorPane>
