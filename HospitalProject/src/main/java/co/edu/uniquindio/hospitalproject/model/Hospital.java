@@ -218,10 +218,12 @@ public class Hospital implements ICRUDPersona, ICRUDUsuario, ICRUDAdmin, ICRUDSa
     @Override
     public boolean actualizarUsuario(String usuario, Usuario usuario01) {
         boolean centinela = false;
+        Usuario usuarioAntiguo=null;
         for (Usuario user : listarUsuarios()) {
-            if (user.getUsuario().equals(usuario)) {
-                user.setUsuario(usuario01.getUsuario());
-                user.setPassword(usuario01.getPassword());
+            if(user.getUsuario().equals(usuario)){
+                usuarioAntiguo=user;
+                listarUsuarios().remove(usuarioAntiguo);
+                listarUsuarios().add(usuario01);
                 centinela = true;
                 break;
             }
