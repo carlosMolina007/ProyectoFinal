@@ -1,9 +1,6 @@
 package co.edu.uniquindio.hospitalproject.model;
 
-import co.edu.uniquindio.hospitalproject.model.Interfaces.ICRUDPersona;
-import co.edu.uniquindio.hospitalproject.model.Interfaces.ICRUDSala;
-import co.edu.uniquindio.hospitalproject.model.Interfaces.ICRUDUsuario;
-import co.edu.uniquindio.hospitalproject.model.Interfaces.ICRUDAdmin;
+import co.edu.uniquindio.hospitalproject.model.Interfaces.*;
 import co.edu.uniquindio.hospitalproject.model.enums.Especializacion;
 import co.edu.uniquindio.hospitalproject.model.enums.Genero;
 import co.edu.uniquindio.hospitalproject.model.enums.TipoRol;
@@ -15,7 +12,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Hospital implements ICRUDPersona, ICRUDUsuario, ICRUDAdmin, ICRUDSala {
+public class Hospital implements ICRUDPersona, ICRUDUsuario, ICRUDAdmin, ICRUDSala, ICRUDHorarios {
 
     //Instancia de Hospital (para mantener las listas con sus datos hasta que el programa cierre)
     private static Hospital instancia;
@@ -27,6 +24,7 @@ public class Hospital implements ICRUDPersona, ICRUDUsuario, ICRUDAdmin, ICRUDSa
     private Collection<Persona> personas;
     private Collection<Administrador> administradors;
     private Collection<Sala> listSalas = new ArrayList<>();
+    private Collection<Horario> listHorarios = new ArrayList<>();
     private boolean datosPrecargados = false;
 
     //Constructor privado
@@ -306,12 +304,72 @@ public class Hospital implements ICRUDPersona, ICRUDUsuario, ICRUDAdmin, ICRUDSa
         return null;
     }
 
-    //Datos pre-cargados (3 admins nomás)
-//    Administrador admin1 = new Administrador("590590","Carlos","Molina","caml.7carlos@gmail.com");
-//    Administrador admin2 = new Administrador("109054", "Tomas", "Londoño", "tomaslondoño@gmail.com");
-//    Administrador admin3 = new Administrador("1198043", "Juan Pablo", "Londoño", "jplondoño@gmail.com");
+    public Doctor buscarDoctorID(String id) {
+        for (Persona doctorVerificar : personas){
+            if (doctorVerificar instanceof Doctor && doctorVerificar.getCedula().equals(id)) {
+                return (Doctor) doctorVerificar;
+            }
+        }
+        return null;
+    }
 
+    //CRUD horario
 
+    @Override
+    public boolean addHorario(Horario horario) {
+        if(listHorarios.isEmpty()){
+            listHorarios.add(horario);
+            return true;
+        }
+        for (Horario horarioComparar : listHorarios) {
+            if (horarioComparar.getDoctorAsignado().getCedula().equals(horario.getDoctorAsignado().getCedula())
+                    && horarioComparar.getDiaSemana().equals(horario.getDiaSemana())) {
+                return false;
+            }
+        }
+        listHorarios.add(horario);
+        return true;
+    }
+
+    @Override
+    public boolean updateHorario(Horario horario) {
+        for (Horario horarioComparar : listHorarios) {
+            if (horarioComparar.getDoctorAsignado().getCedula().equals(horario.getDoctorAsignado().getCedula())
+                    && horarioComparar.getDiaSemana().equals(horario.getDiaSemana())) {
+                // Validación completa de hora
+                if (horario.getHoraInicio() < horario.getHoraFin()
+                        || (horario.getHoraInicio() == horario.getHoraFin() && horario.getMinutosInicio() < horario.getMinutosFin())) {
+
+                    horarioComparar.setHoraInicio(horario.getHoraInicio());
+                    horarioComparar.setMinutosInicio(horario.getMinutosInicio());
+                    horarioComparar.setHoraFin(horario.getHoraFin());
+                    horarioComparar.setMinutosFin(horario.getMinutosFin());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteHorario(Horario horarioEliminar){
+        for (Horario horarioExistente : listHorarios) {
+            if(horarioExistente.getDoctorAsignado().getCedula().equals(horarioEliminar.getDoctorAsignado().getCedula())
+                    && horarioEliminar.getHoraInicio()== horarioExistente.getHoraInicio()
+                    && horarioEliminar.getMinutosInicio() == horarioExistente.getMinutosInicio()
+                    && horarioEliminar.getHoraFin() == horarioExistente.getHoraFin()
+                    && horarioEliminar.getMinutosFin() == horarioExistente.getMinutosFin()) {
+                listHorarios.remove(horarioExistente);
+                return true;
+            };
+        }
+        return false;
+    }
+
+    @Override
+    public Collection<Horario> listarHorarios(){
+        return listHorarios;
+    }
 
 
     //getter's and setter's
