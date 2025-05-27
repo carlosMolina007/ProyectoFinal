@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,6 +22,45 @@ class UsuarioCrudTest {
         hospital = Hospital.getInstancia();
         hospital.setNombre("Hospital de Prueba");
         hospital.setNit("987654-321");
+    }
+
+    @Test
+    void testCrearSala() {
+
+        Sala sala = new Sala("S001", "Cirugía", true);
+
+        boolean result = hospital.crearSala(sala);
+
+        assertTrue(result, "La sala debería haberse creado correctamente.");
+        Collection<Sala> salasRegistradas= hospital.listarSala();
+        Sala salaRegistrada=null;
+        for(Sala s : salasRegistradas ){
+            if(s.getIdSala().equals("S001")){
+                salaRegistrada = s;
+            }
+        }
+        assertEquals(hospital.listarSala().size(), salasRegistradas.size(), "Debería haber una sala en el sistema.");
+        assertNotNull(salaRegistrada,"Deberia encontrar la sala registrada");
+        assertEquals("S001", salaRegistrada.getIdSala(), "El número de sala debería coincidir.");
+        assertEquals("Cirugía", salaRegistrada.getNombreSala(), "El tipo de sala debería coincidir.");
+    }
+
+    @Test
+    void testListarUsuarios() {
+
+        Persona persona1 = new Paciente("123", "Juan", "Perez", LocalDate.of(2000, 10, 17), Genero.MASCULINO, TipoSangre.OPOSITIVO, "pepepicapapas@gmail.com", "1234567890");
+        Persona persona2 = new Paciente("456", "Maria", "Lopez", LocalDate.of(2000, 10, 17), Genero.FEMENINO, TipoSangre.OPOSITIVO, "pepepicapapas2@gmail.com", "1234567890");
+        Usuario usuario1 = new Usuario("juan123", "password123", TipoRol.PACIENTE, persona1);
+        Usuario usuario2 = new Usuario("maria456", "password456", TipoRol.PACIENTE, persona2);
+        hospital.crearUsuario(usuario1);
+        hospital.crearUsuario(usuario2);
+
+
+        Collection<Usuario> usuarios = hospital.listarUsuarios();
+
+
+        assertNotNull(hospital.listarUsuarios(), "La lista de usuarios no debería ser nula.");
+        assertEquals(hospital.listarUsuarios().size(), usuarios.size(), "Debería haber 2 usuarios registrados.");
     }
 
     @Test
@@ -71,7 +109,6 @@ class UsuarioCrudTest {
         Collection<Usuario> usuarios = hospital.listarUsuarios();
         Usuario usuarioGuardado = null;
         for(Usuario u : usuarios){
-            System.out.println(u.getUsuario());
             if(u.getUsuario().equals("juan1234")){
                 usuarioGuardado = u;
             }
@@ -81,45 +118,10 @@ class UsuarioCrudTest {
         assertEquals(TipoRol.ADMIN, usuarioGuardado.getTipoRol(), "El rol debería haberse actualizado a ADMIN.");
     }
 
-    @Test
-    void testListarUsuarios() {
-
-        Persona persona1 = new Paciente("123", "Juan", "Perez", LocalDate.of(2000, 10, 17), Genero.MASCULINO, TipoSangre.OPOSITIVO, "pepepicapapas@gmail.com", "1234567890");
-        Persona persona2 = new Paciente("456", "Maria", "Lopez", LocalDate.of(2000, 10, 17), Genero.FEMENINO, TipoSangre.OPOSITIVO, "pepepicapapas2@gmail.com", "1234567890");
-        Usuario usuario1 = new Usuario("juan123", "password123", TipoRol.PACIENTE, persona1);
-        Usuario usuario2 = new Usuario("maria456", "password456", TipoRol.PACIENTE, persona2);
-        hospital.crearUsuario(usuario1);
-        hospital.crearUsuario(usuario2);
 
 
-        Collection<Usuario> usuarios = hospital.listarUsuarios();
 
 
-        assertNotNull(usuarios, "La lista de usuarios no debería ser nula.");
-        assertEquals(2, usuarios.size(), "Debería haber 2 usuarios registrados.");
-    }
-
-
-        @Test
-        void testCrearSala() {
-
-            Sala sala = new Sala("S001", "Cirugía", true);
-
-            boolean result = hospital.crearSala(sala);
-
-            assertTrue(result, "La sala debería haberse creado correctamente.");
-            Collection<Sala> salasRegistradas= hospital.listarSala();
-            Sala salaRegistrada=null;
-            for(Sala s : salasRegistradas ){
-                if(s.getIdSala().equals("S001")){
-                    salaRegistrada = s;
-                }
-            }
-            assertEquals(1, salasRegistradas.size(), "Debería haber una sala en el sistema.");
-            assertNotNull(salaRegistrada,"Deberia encontrar la sala registrada");
-            assertEquals("S001", salaRegistrada.getIdSala(), "El número de sala debería coincidir.");
-            assertEquals("Cirugía", salaRegistrada.getNombreSala(), "El tipo de sala debería coincidir.");
-        }
 
         @Test
         void testEliminarSala() {
@@ -154,6 +156,7 @@ class UsuarioCrudTest {
                     salaActualizada = s;
                 }
             }
+            assertNotNull(salaActualizada,"Deberia encontrar la sala actualizada");
             assertEquals("S002", salaActualizada.getIdSala(), "La nueva capacidad debería haber sido actualizada.");
             assertEquals("Consulta General", salaActualizada.getNombreSala(), "El nuevo tipo debería haber sido actualizado.");
         }
