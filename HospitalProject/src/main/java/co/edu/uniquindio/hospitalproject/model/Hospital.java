@@ -1,0 +1,478 @@
+package co.edu.uniquindio.hospitalproject.model;
+
+import co.edu.uniquindio.hospitalproject.model.Interfaces.*;
+import co.edu.uniquindio.hospitalproject.model.enums.Especializacion;
+import co.edu.uniquindio.hospitalproject.model.enums.Genero;
+import co.edu.uniquindio.hospitalproject.model.enums.TipoRol;
+import co.edu.uniquindio.hospitalproject.model.enums.TipoSangre;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Hospital implements ICRUDPersona, ICRUDUsuario, ICRUDAdmin, ICRUDSala, ICRUDHorarios, ICRUDCitaMedica {
+
+    //Instancia de Hospital (para mantener las listas con sus datos hasta que el programa cierre)
+    private static Hospital instancia;
+
+    //Atributos hospital
+    private String nombre;
+    private String nit;
+    private LinkedList<Usuario> listUsers = new LinkedList<>();
+    private Collection<Persona> personas;
+    private Collection<Administrador> administradors;
+    private Collection<Sala> listSalas = new ArrayList<>();
+    private Collection<Horario> listHorarios = new ArrayList<>();
+    private Collection<CitaMedica> listCitasMedicas = new ArrayList<>();
+    private boolean datosPrecargados = false;
+
+    //Constructor privado
+    private Hospital(String nombre, String nit) {
+        this.nombre = nombre;
+        this.nit = nit;
+        this.personas = new LinkedList<>();
+        this.administradors = new LinkedList<>();
+    }
+
+    public static Hospital getInstancia() {
+        if (instancia == null) {
+            instancia = new Hospital("Hospital UQ", "123.456.789");
+        }
+        return instancia;
+    }
+
+    //Metodo para precargar datos users de tipo Admin (única forma de crearlos) y a su vez, evitar duplicados (cosa q estaba pasando)
+    public void precargarDatos() {
+        if (datosPrecargados) return;
+        //Datos Precargados:
+        //Creacion de admins
+        Administrador admin1 = new Administrador("590590","Carlos","Molina","caml.7carlos@gmail.com");
+        Administrador admin2 = new Administrador("109054", "Tomas", "Londoño", "tomaslondoño@gmail.com");
+        Administrador admin3 = new Administrador("1198043", "Juan Pablo", "Londoño", "jplondoño@gmail.com");
+        crearAdmin(admin1);
+        crearAdmin(admin2);
+        crearAdmin(admin3);
+
+        //Creación de un paciente y doctor (para validaciones y demás)
+        Doctor doctor1 = new Doctor("49023", "Sofia", "Rodriguez", LocalDate.of(1996, 10, 25),
+                Genero.FEMENINO, TipoSangre.ABPOSITIVO, Especializacion.ONCOLOGO, "1230-323", true);
+        Paciente paciente1 = new Paciente("1090232", "Kasandra", "Ramirez", LocalDate.of(1980, 12, 22),
+                Genero.FEMENINO, TipoSangre.BNEGATIVO, "kasanRamirez22@gmail.com", "3286543232");
+        crearPersona(doctor1);
+        crearPersona(paciente1);
+        Sala sala1 = new Sala("12030", "Sala General", true);
+        crearSala(sala1);
+
+        //Creación de usuarios
+        Usuario user1 = new Usuario("CarlosMol", "112233", TipoRol.ADMIN, admin1);
+        Usuario user2 = new Usuario("TomasLon", "223344", TipoRol.ADMIN, admin2);
+        Usuario user3 = new Usuario("JuanPa", "334455", TipoRol.ADMIN, admin3);
+        Usuario user4 = new Usuario("SofRodriguez", "456789", TipoRol.DOCTOR, doctor1);
+        Usuario user5 = new Usuario("KasaRam", "Kasandra", TipoRol.PACIENTE, paciente1);
+        crearUsuario(user1);
+        crearUsuario(user2);
+        crearUsuario(user3);
+        crearUsuario(user4);
+        crearUsuario(user5);
+
+        datosPrecargados = true;
+    }
+
+    //Métodos de CRUD´s
+
+    @Override
+    public boolean crearPersona(Persona persona) {
+        boolean centinela = false;
+        if (!verificarPersona(persona.getCedula())) {
+            if (persona instanceof Doctor doctor) {
+                String idProfesional = doctor.getIdProfesional();
+                Especializacion especializacion = doctor.getEspecializacion();
+                Boolean disponible = doctor.getDoctorDisponible();
+            } else if (persona instanceof Paciente paciente) {
+                String email = paciente.getEmail();
+                String telefono = paciente.getTelefono();
+            }
+            personas.add(persona);
+            centinela = true;
+        }
+
+        return centinela;
+    }
+
+
+    @Override
+    public boolean eliminarPersona(String id) {
+        boolean centinela = false;
+        for (Persona persona : personas) {
+            if (persona.getCedula().equals(id)) {
+                personas.remove(persona);
+                centinela = true;
+                break;
+            }
+        }
+        return centinela;
+    }
+
+    @Override
+    public boolean actualizarPersona(String id, Persona actualizado) {
+        boolean centinela = false;
+        for (Persona persona : personas) {
+            if (persona.getCedula().equals(id)) {
+                persona.setCedula(actualizado.getCedula());
+                persona.setNombre(actualizado.getNombre());
+                persona.setApellido(actualizado.getApellido());
+                persona.setFechaNacimiento(actualizado.getFechaNacimiento());
+                persona.setGenero(actualizado.getGenero());
+                persona.setTipoSangre(actualizado.getTipoSangre());
+                centinela = true;
+                break;
+            }
+        }
+        return centinela;
+    }
+
+    @Override
+    public <T extends Persona> Collection<T> listarPersonasPorTipo(Class<T> tipo) {
+        List<T> resultado = new ArrayList<>();
+
+        for (Persona persona : personas) {
+            if (tipo.isInstance(persona)) {
+                resultado.add(tipo.cast(persona));
+            }
+        }
+
+        return resultado;
+    }
+
+
+    // CRUD Admin
+
+    @Override
+    public boolean crearAdmin(Administrador administrador) {
+        boolean centinela = false;
+        if (!verificarPersona(administrador.getCedula())) {
+            administradors.add(administrador);
+            centinela = true;
+        }
+        return centinela;
+    }
+
+    @Override
+    public boolean eliminarAdmin(String id) {
+        boolean centinela = false;
+        for (Administrador administrador : administradors) {
+            if (administrador.getCedula().equals(id)) {
+                administradors.remove(administrador);
+                centinela = true;
+                break;
+            }
+        }
+        return centinela;
+    }
+
+    @Override
+    public boolean actualizarAdmin(String id, Administrador actualizado01) {
+        boolean centinela = false;
+        for (Administrador administrador : administradors) {
+            if (administrador.getCedula().equals(id)) {
+                administrador.setCedula(administrador.getCedula());
+                administrador.setNombre(actualizado01.getNombre());
+                administrador.setApellido(actualizado01.getApellido());
+                administrador.setEmail(actualizado01.getEmail());
+                centinela = true;
+                break;
+            }
+        }
+        return centinela;
+    }
+
+    @Override
+    public Collection<Administrador> listarAdmin() {
+        return administradors;
+    }
+
+    //CRUD Usuario
+
+    @Override
+    public boolean crearUsuario(Usuario usuario) {
+        boolean centinela = false;
+        if (!verificarPersona(usuario.getUsuario())) {
+            listUsers.add(usuario);
+            centinela = true;
+        }
+        return centinela;
+    }
+
+    @Override
+    public boolean eliminarUsuario(String usuario) {
+        boolean centinela = false;
+        for (Usuario usuario1 : listarUsuarios()) {
+            if (usuario1.getUsuario().equals(usuario)) {
+                listarUsuarios().remove(usuario1);
+                centinela = true;
+                break;
+            }
+        }
+        return centinela;
+    }
+
+    @Override
+    public boolean actualizarUsuario(String usuario, Usuario usuario01) {
+        boolean centinela = false;
+        for (Usuario user : listarUsuarios()) {
+            if (user.getUsuario().equals(usuario)) {
+                user.setUsuario(usuario01.getUsuario());
+                user.setPassword(usuario01.getPassword());
+                centinela = true;
+                break;
+            }
+        }
+        return centinela;
+    }
+
+    @Override
+    public Collection<Usuario> listarUsuarios() {
+        return listUsers;
+    }
+
+    //Métodos CRUD para Sala
+    @Override
+    public boolean crearSala(Sala newSala) {
+        if (listarSala().isEmpty()) {
+            listSalas.add(newSala);
+            return true;
+        }
+        for (Sala sala : listSalas){
+            if(sala.getIdSala().equalsIgnoreCase(newSala.getIdSala())){
+                return false;
+            }
+        }
+        listSalas.add(newSala);
+        return true;
+    }
+
+    @Override
+    public boolean eliminarSala(String idSalaEliminar) {
+        if(listarSala().isEmpty()){
+            return false;
+        }
+        for (Sala sala : listSalas) {
+            if (sala.getIdSala().equals(idSalaEliminar)) {
+                listSalas.remove(sala);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean actualizarSala(String idSala, Sala actualizado) {
+        if(listarSala().isEmpty()){
+            return false;
+        }
+        for (Sala sala : listSalas) {
+            if (sala.getIdSala().equals(idSala)) {
+                sala.setNombreSala(actualizado.getNombreSala());
+                sala.setEstadoSala(actualizado.getEstadoSala());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Collection<Sala> listarSala() {
+        return listSalas;
+    }
+
+    // Metodos de verificacion de instancias
+
+    public boolean verificarPersona(String id) {
+        for (Persona persona : personas) {
+            if (persona.getCedula().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Persona verificarPersonaID(String id) {
+        for (Persona persona : personas) {
+            if (persona.getCedula().equals(id)) {
+                return persona;
+            }
+        }
+        return null;
+    }
+
+    public Doctor buscarDoctorID(String id) {
+        for (Persona doctorVerificar : personas){
+            if (doctorVerificar instanceof Doctor && doctorVerificar.getCedula().equals(id)) {
+                return (Doctor) doctorVerificar;
+            }
+        }
+        return null;
+    }
+
+    public Paciente buscarPacienteID(String id) {
+        for (Persona pacienteVerificar : personas){
+            if (pacienteVerificar instanceof Paciente && pacienteVerificar.getCedula().equals(id)) {
+                return (Paciente) pacienteVerificar;
+            }
+        }
+        return null;
+    }
+
+    public Doctor buscarDoctorPorEspecialidad(Especializacion especializacion) {
+        for (Persona doctorVerificar : personas){
+            if (doctorVerificar instanceof Doctor && ((Doctor) doctorVerificar).getDoctorDisponible() == true
+                    && ((Doctor) doctorVerificar).getEspecializacion() == especializacion) {
+                return (Doctor) doctorVerificar;
+            }
+        }
+        return null;
+    }
+
+    public Sala buscarSalaDisponible(){
+        for (Sala sala : listSalas) {
+            if (sala.getEstadoSala()){
+                return sala;
+            }
+        }
+        return null;
+    }
+
+    public Collection<CitaMedica> obtenerCitasPorPaciente(String idPaciente) {
+        Collection<CitaMedica> citasDeUnPaciente = new ArrayList<>();
+        for (CitaMedica citaMedica : listCitasMedicas){
+            if (citaMedica.getPacienteAsignado().getCedula().equals(idPaciente)){
+                citasDeUnPaciente.add(citaMedica);
+            }
+        }
+        return citasDeUnPaciente;
+    }
+
+    //CRUD horario
+
+    @Override
+    public boolean addHorario(Horario horario) {
+        if(listHorarios.isEmpty()){
+            listHorarios.add(horario);
+            return true;
+        }
+        for (Horario horarioComparar : listHorarios) {
+            if (horarioComparar.getDoctorAsignado().getCedula().equals(horario.getDoctorAsignado().getCedula())
+                    && horarioComparar.getDiaSemana().equals(horario.getDiaSemana())) {
+                return false;
+            }
+        }
+        listHorarios.add(horario);
+        return true;
+    }
+
+    @Override
+    public boolean updateHorario(Horario horario) {
+        for (Horario horarioComparar : listHorarios) {
+            if (horarioComparar.getDoctorAsignado().getCedula().equals(horario.getDoctorAsignado().getCedula())
+                    && horarioComparar.getDiaSemana().equals(horario.getDiaSemana())) {
+                // Validación completa de hora
+                if (horario.getHoraInicio() < horario.getHoraFin()
+                        || (horario.getHoraInicio() == horario.getHoraFin() && horario.getMinutosInicio() < horario.getMinutosFin())) {
+
+                    horarioComparar.setHoraInicio(horario.getHoraInicio());
+                    horarioComparar.setMinutosInicio(horario.getMinutosInicio());
+                    horarioComparar.setHoraFin(horario.getHoraFin());
+                    horarioComparar.setMinutosFin(horario.getMinutosFin());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteHorario(Horario horarioEliminar){
+        for (Horario horarioExistente : listHorarios) {
+            if(horarioExistente.getDoctorAsignado().getCedula().equals(horarioEliminar.getDoctorAsignado().getCedula())
+                    && horarioEliminar.getHoraInicio()== horarioExistente.getHoraInicio()
+                    && horarioEliminar.getMinutosInicio() == horarioExistente.getMinutosInicio()
+                    && horarioEliminar.getHoraFin() == horarioExistente.getHoraFin()
+                    && horarioEliminar.getMinutosFin() == horarioExistente.getMinutosFin()) {
+                listHorarios.remove(horarioExistente);
+                return true;
+            };
+        }
+        return false;
+    }
+
+    @Override
+    public Collection<Horario> listarHorarios(){
+        return listHorarios;
+    }
+
+
+    @Override
+    public boolean crearCitaMedica(CitaMedica citaMedica) {
+        for (CitaMedica citaMedicaEx : listCitasMedicas) {
+            if (citaMedicaEx.getIdCita().equals(citaMedica.getIdCita())) {
+                return false;
+            }
+        }
+        listCitasMedicas.add(citaMedica);
+        return true;
+    }
+
+    @Override
+    public boolean actualizarCitaMedica(CitaMedica citaMedica) {
+        for (CitaMedica citaMedicaEx : listCitasMedicas) {
+            if(citaMedicaEx.getIdCita().equals(citaMedica.getIdCita())){
+                citaMedicaEx.setEstadoCita(citaMedica.getEstadoCita());
+                citaMedicaEx.setFechaCita(citaMedica.getFechaCita());
+                citaMedicaEx.setHoraCita(citaMedica.getHoraCita());
+                citaMedicaEx.setDoctorAsignado(citaMedica.getDoctorAsignado());
+                citaMedicaEx.setPacienteAsignado(citaMedica.getPacienteAsignado());
+                citaMedicaEx.setSalaAsignada(citaMedica.getSalaAsignada());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean eliminarCitaMedica(CitaMedica citaMedica) {
+        for (CitaMedica citaMedicaEx : listCitasMedicas) {
+            if(citaMedicaEx.getIdCita().equals(citaMedica.getIdCita())){
+                listCitasMedicas.remove(citaMedicaEx);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Collection<CitaMedica> listarCitasMedicas(){
+        return listCitasMedicas;
+    }
+
+    //getter's and setter's
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    public String getNit() {
+        return nit;
+    }
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
+    public LinkedList<Usuario> getListUsers() {
+        return listUsers;
+    }
+    public void setListUsers(LinkedList<Usuario> listUsers) {
+        this.listUsers = listUsers;
+    }
+}
